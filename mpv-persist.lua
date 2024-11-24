@@ -38,10 +38,41 @@ local function write_options()
   -- mp.msg.info("Options saved to " .. conf_path)
 end
 
+-- Function to load options from a directory-specific config
+local function load_options()
+  local path = mp.get_property("path")
+  if not path then return end
+
+  local dir_sep = package.config:sub(1, 1)
+  local dir_path = path:match("(.*" .. dir_sep .. ")")
+
+  local conf_path = dir_path .. "mpv.conf"
+  mp.msg.info("Loading options from " .. conf_path)
+
+  local file = io.open(conf_path, "r")
+  if not file then
+    mp.msg.warn("Could not open file for reading: " .. conf_path)
+    return
+  end
+
+  for line in file:lines() do
+    local key, value = line:match("([^=]+)=([^=]+)")
+    if key and value then
+      mp.set_property(key, value)
+    end
+  end
+
+  file:close()
+  mp.msg.info("Options loaded from " .. conf_path)
+end
+
 -- Observe property changes
 for _, prop in ipairs(opts.props) do
   mp.observe_property(prop, "native", write_options)
 end
+
+-- Load options on file load
+mp.register_event("file-loaded", load_options)
 
 -- Save options on shutdown
 mp.register_event("shutdown", write_options)
