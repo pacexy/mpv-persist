@@ -10,12 +10,17 @@ local opts = {
 -- Read options from the config file
 options.read_options(opts)
 
--- Function to write options to a file-specific config
+-- Function to write options to a directory-specific config
 local function write_options()
   local path = mp.get_property("path")
   if not path then return end
 
-  local conf_path = path .. ".conf"
+  local dir_sep = package.config:sub(1, 1)
+  local dir_path = path:match("(.*" .. dir_sep .. ")")
+
+  local conf_path = dir_path .. "mpv.conf"
+  mp.msg.info("Saving options to " .. conf_path)
+
   local file = io.open(conf_path, "w")
   if not file then
     mp.msg.error("Could not open file for writing: " .. conf_path)
@@ -30,12 +35,12 @@ local function write_options()
   end
 
   file:close()
-  mp.msg.info("Options saved to " .. conf_path)
+  -- mp.msg.info("Options saved to " .. conf_path)
 end
 
 -- Observe property changes
 for _, prop in ipairs(opts.props) do
-  mp.observe_property(prop, "number", write_options)
+  mp.observe_property(prop, "native", write_options)
 end
 
 -- Save options on shutdown
