@@ -58,7 +58,7 @@ local function save_properties()
   if suppress_write then return end
   local conf_path = get_dir_conf_path()
   if not conf_path then return end
-  mp.msg.info("Saving options to " .. conf_path)
+  mp.msg.info("Saving properties")
 
   local properties_table = parse_properties_from_file(conf_path)
 
@@ -76,7 +76,7 @@ end
 local function load_properties()
   local conf_path = get_dir_conf_path()
   if not conf_path then return end
-  mp.msg.info("Loading options from " .. conf_path)
+  mp.msg.info("Loading properties")
 
   local properties_table = parse_properties_from_file(conf_path)
 
@@ -84,8 +84,6 @@ local function load_properties()
   for key, value in pairs(properties_table) do
     mp.set_property(key, value)
   end
-
-  mp.msg.info("Options loaded from " .. conf_path)
 end
 
 for _, prop in ipairs(opts.props) do
