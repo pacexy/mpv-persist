@@ -15,8 +15,6 @@ local opts = {
 
 options.read_options(opts)
 
-local suppress_write = false
-
 local function get_dir_conf_path()
   local path = mp.get_property("path")
   -- path is nil during loading file
@@ -55,28 +53,32 @@ end
 
 
 local function save_properties()
-  if suppress_write then return end
   local conf_path = get_dir_conf_path()
   if not conf_path then return end
-  mp.msg.info("Saving properties")
 
   local properties_table = parse_properties_from_file(conf_path)
+  local properties_changed = false
 
-  -- merge the properties
   for _, prop in ipairs(opts.props) do
     local value = mp.get_property(prop)
-    if value then
+    if value and properties_table[prop] ~= value then
       properties_table[prop] = value
+      properties_changed = true
     end
   end
 
+  if not properties_changed then
+    -- mp.msg.info("Properties have not changed, skipping save")
+    return
+  end
+
   write_properties_to_file(conf_path, properties_table)
+  mp.msg.info("Properties saved")
 end
 
 local function load_properties()
   local conf_path = get_dir_conf_path()
   if not conf_path then return end
-  mp.msg.info("Loading properties")
 
   local properties_table = parse_properties_from_file(conf_path)
 
@@ -84,18 +86,15 @@ local function load_properties()
   for key, value in pairs(properties_table) do
     mp.set_property(key, value)
   end
+
+  mp.msg.info("Properties loaded")
 end
 
 for _, prop in ipairs(opts.props) do
   mp.observe_property(prop, "native", save_properties)
 end
 
-mp.register_event("start-file", function()
-  suppress_write = true
-end)
-
 mp.register_event("file-loaded", function()
-  suppress_write = false
   load_properties()
 end)
 
