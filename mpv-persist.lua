@@ -10,8 +10,11 @@ local opts = {
 -- Read options from the config file
 options.read_options(opts)
 
+local suppress_write = false
+
 -- Function to write options to a directory-specific config
 local function write_options()
+  if suppress_write then return end
   local path = mp.get_property("path")
   if not path then return end
 
@@ -71,8 +74,15 @@ for _, prop in ipairs(opts.props) do
   mp.observe_property(prop, "native", write_options)
 end
 
+mp.register_event("start-file", function()
+  suppress_write = true
+end)
+
 -- Load options on file load
-mp.register_event("file-loaded", load_options)
+mp.register_event("file-loaded", function()
+  suppress_write = false
+  load_options()
+end)
 
 -- Save options on shutdown
 mp.register_event("shutdown", write_options)
