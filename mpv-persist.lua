@@ -4,7 +4,13 @@ local options = require 'mp.options'
 local utils = require 'mp.utils'
 
 local opts = {
-  props = { "volume", "sid" }
+  props = {
+    "volume",
+    "sid",
+    "sub-delay",
+    "secondary-sid",
+    "secondary-sub-delay"
+  }
 }
 
 options.read_options(opts)
