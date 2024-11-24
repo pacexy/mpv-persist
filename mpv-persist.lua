@@ -27,21 +27,42 @@ local function write_options()
   if not conf_path then return end
   mp.msg.info("Saving options to " .. conf_path)
 
-  local file = io.open(conf_path, "w")
+  -- Initialize options table
+  local options_table = {}
+
+  -- Check if the config file exists
+  local file = io.open(conf_path, "r")
+  if file then
+    -- Read existing options
+    for line in file:lines() do
+      local key, value = line:match("([^=]+)=([^=]+)")
+      if key and value then
+        options_table[key] = value
+      end
+    end
+    file:close()
+  end
+
+  -- Update options with current properties
+  for _, prop in ipairs(opts.props) do
+    local value = mp.get_property(prop)
+    if value then
+      options_table[prop] = value
+    end
+  end
+
+  -- Write updated options back to the file
+  file = io.open(conf_path, "w")
   if not file then
     mp.msg.error("Could not open file for writing: " .. conf_path)
     return
   end
 
-  for _, prop in ipairs(opts.props) do
-    local value = mp.get_property(prop)
-    if value then
-      file:write(prop .. "=" .. value .. "\n")
-    end
+  for key, value in pairs(options_table) do
+    file:write(key .. "=" .. value .. "\n")
   end
 
   file:close()
-  -- mp.msg.info("Options saved to " .. conf_path)
 end
 
 -- Function to load options from a directory-specific config
