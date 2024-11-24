@@ -12,16 +12,22 @@ options.read_options(opts)
 
 local suppress_write = false
 
--- Function to write options to a directory-specific config
-local function write_options()
-  if suppress_write then return end
+local function get_conf_path()
   local path = mp.get_property("path")
-  if not path then return end
+  if not path then return nil end
 
   local dir_sep = package.config:sub(1, 1)
   local dir_path = path:match("(.*" .. dir_sep .. ")")
+  if not dir_path then return nil end
 
-  local conf_path = dir_path .. "mpv.conf"
+  return dir_path .. "mpv.conf"
+end
+
+-- Function to write options to a directory-specific config
+local function write_options()
+  if suppress_write then return end
+  local conf_path = get_conf_path()
+  if not conf_path then return end
   mp.msg.info("Saving options to " .. conf_path)
 
   local file = io.open(conf_path, "w")
@@ -43,13 +49,8 @@ end
 
 -- Function to load options from a directory-specific config
 local function load_options()
-  local path = mp.get_property("path")
-  if not path then return end
-
-  local dir_sep = package.config:sub(1, 1)
-  local dir_path = path:match("(.*" .. dir_sep .. ")")
-
-  local conf_path = dir_path .. "mpv.conf"
+  local conf_path = get_conf_path()
+  if not conf_path then return end
   mp.msg.info("Loading options from " .. conf_path)
 
   local file = io.open(conf_path, "r")
