@@ -1,6 +1,7 @@
 -- mpv-persist.lua
 local mp = require 'mp'
 local options = require 'mp.options'
+local utils = require 'mp.utils'
 
 -- Define default options
 local opts = {
@@ -14,13 +15,11 @@ local suppress_write = false
 
 local function get_conf_path()
   local path = mp.get_property("path")
-  if not path then return nil end
+  -- path is nil during loading file
+  if not path then return end
 
-  local dir_sep = package.config:sub(1, 1)
-  local dir_path = path:match("(.*" .. dir_sep .. ")")
-  if not dir_path then return nil end
-
-  return dir_path .. "mpv.conf"
+  local dir_path = utils.split_path(path)
+  return utils.join_path(dir_path, "mpv.conf")
 end
 
 -- Function to write options to a directory-specific config
