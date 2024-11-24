@@ -4,11 +4,7 @@ local options = require 'mp.options'
 
 -- Define default options
 local opts = {
-  volume = 100,
-  brightness = 0,
-  contrast = 0,
-  saturation = 0,
-  gamma = 0
+  props = { "volume", "sid" }
 }
 
 -- Read options from the config file
@@ -26,22 +22,21 @@ local function write_options()
     return
   end
 
-  file:write("volume=" .. mp.get_property("volume") .. "\n")
-  file:write("brightness=" .. mp.get_property("brightness") .. "\n")
-  file:write("contrast=" .. mp.get_property("contrast") .. "\n")
-  file:write("saturation=" .. mp.get_property("saturation") .. "\n")
-  file:write("gamma=" .. mp.get_property("gamma") .. "\n")
+  for _, prop in ipairs(opts.props) do
+    local value = mp.get_property(prop)
+    if value then
+      file:write(prop .. "=" .. value .. "\n")
+    end
+  end
 
   file:close()
   mp.msg.info("Options saved to " .. conf_path)
 end
 
 -- Observe property changes
-mp.observe_property("volume", "number", write_options)
-mp.observe_property("brightness", "number", write_options)
-mp.observe_property("contrast", "number", write_options)
-mp.observe_property("saturation", "number", write_options)
-mp.observe_property("gamma", "number", write_options)
+for _, prop in ipairs(opts.props) do
+  mp.observe_property(prop, "number", write_options)
+end
 
 -- Save options on shutdown
 mp.register_event("shutdown", write_options)
