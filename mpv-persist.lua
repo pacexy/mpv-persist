@@ -15,6 +15,8 @@ local opts = {
 
 options.read_options(opts)
 
+local suppress_write = false
+
 local function get_dir_conf_path()
   local path = mp.get_property("path")
   -- path is nil during loading file
@@ -53,6 +55,7 @@ end
 
 
 local function save_properties()
+  if suppress_write then return end
   local conf_path = get_dir_conf_path()
   if not conf_path then return end
 
@@ -94,7 +97,20 @@ for _, prop in ipairs(opts.props) do
   mp.observe_property(prop, "native", save_properties)
 end
 
+mp.register_event("start-file", function()
+  -- MPV resets video/audio/sub track selection when:
+  -- 1. Playing the next file on the playlist, and
+  -- 2. The new file has a different track layout.
+  -- To prevent writing these reset track selections to the configuration file, we suppress writing.
+  -- References:
+  -- https://mpv.io/manual/stable/#options-reset-on-next-file
+  -- https://github.com/mpv-player/mpv/issues/13670
+  -- https://github.com/mpv-player/mpv/blob/1bf821ebdc5c4775fe4bdbba994259c53463fc69/player/loadfile.c#L643
+  suppress_write = true
+end)
+
 mp.register_event("file-loaded", function()
+  suppress_write = false
   load_properties()
 end)
 
