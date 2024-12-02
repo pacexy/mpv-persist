@@ -1,4 +1,6 @@
--- mpv-persist.lua
+-- persist.lua
+-- https://github.com/pacexy/mpv-persist
+
 local mp = require 'mp'
 local options = require 'mp.options'
 local utils = require 'mp.utils'
