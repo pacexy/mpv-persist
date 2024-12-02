@@ -4,16 +4,11 @@ local options = require 'mp.options'
 local utils = require 'mp.utils'
 
 local opts = {
-  props = {
-    "volume",
-    "sid",
-    "sub-delay",
-    "secondary-sid",
-    "secondary-sub-delay"
-  }
+  props = 'volume,sid,sub-delay,secondary-sid,secondary-sub-delay'
 }
 
 options.read_options(opts)
+local props_iter = string.gmatch(opts.props, '([^,]+)')
 
 local suppress_write = false
 
@@ -62,7 +57,7 @@ local function save_properties()
   local properties_table = parse_properties_from_file(conf_path)
   local properties_changed = false
 
-  for _, prop in ipairs(opts.props) do
+  for prop in props_iter do
     local value = mp.get_property(prop)
     if value and properties_table[prop] ~= value then
       mp.msg.debug(prop .. ": " .. (properties_table[prop] or "nil") .. " -> " .. value)
@@ -93,7 +88,7 @@ local function load_properties()
   mp.msg.info("Properties loaded")
 end
 
-for _, prop in ipairs(opts.props) do
+for prop in props_iter do
   mp.observe_property(prop, "native", save_properties)
 end
 
