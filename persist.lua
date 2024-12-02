@@ -65,14 +65,14 @@ local function save_properties()
   for _, prop in ipairs(opts.props) do
     local value = mp.get_property(prop)
     if value and properties_table[prop] ~= value then
-      mp.msg.info(prop .. ": " .. (properties_table[prop] or "nil") .. " -> " .. value)
+      mp.msg.debug(prop .. ": " .. (properties_table[prop] or "nil") .. " -> " .. value)
       properties_table[prop] = value
       properties_changed = true
     end
   end
 
   if not properties_changed then
-    mp.msg.info("No properties changed")
+    mp.msg.debug("No properties changed")
     return
   end
 
