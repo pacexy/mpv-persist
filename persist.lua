@@ -1,4 +1,5 @@
 -- persist.lua
+-- version: 0.1.0
 -- https://github.com/pacexy/mpv-persist
 
 local mp = require 'mp'
