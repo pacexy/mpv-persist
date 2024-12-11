@@ -1,22 +1,24 @@
 # mpv-persist
 
-Persist certain properties to the [directory-specific configuratoin file](https://mpv.io/manual/stable/#file-specific-configuration-files).
+Persist certain properties to the [directory-specific configuration file](https://mpv.io/manual/stable/#file-specific-configuration-files).
 
 ## Installation
 
-Put `persist.lua` in mpv `scripts` directory.
+1. Download `persist.lua`.
+2. Place it in the `scripts` directory of your mpv installation.
 
-For details, see [Script location - mpv.io](https://mpv.io/manual/stable/#script-location).
+For more details, see [Script location - mpv.io](https://mpv.io/manual/stable/#script-location).
 
 ## Configuration
 
-Put `persist.conf` in mpv `script-opts` directory.
+1. Download `persist.conf`.
+2. Place it in the `script-opts` directory of your mpv installation.
 
-For details, see [`mp.options` functions - mpv.io](https://mpv.io/manual/stable/#mp-options-functions).
+For more details, see [`mp.options` functions - mpv.io](https://mpv.io/manual/stable/#mp-options-functions).
 
 ### `props`
 
-The `props` contains the list of properties to be persisted.
+The `props` option contains the list of properties to be persisted.
 
 By default, the following properties are persisted:
 
@@ -28,5 +30,4 @@ By default, the following properties are persisted:
 
 ## References
 
-- [Configuration Files - mpv.io](https://mpv.io/manual/stable/#configuration-files)
 - [File-specific Configuration Files - mpv.io](https://mpv.io/manual/stable/#file-specific-configuration-files)
