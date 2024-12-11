@@ -1,16 +1,22 @@
 # mpv-persist
 
-Persist certain properties to the directory-specific configuratoin file.
+Persist certain properties to the [directory-specific configuratoin file](https://mpv.io/manual/stable/#file-specific-configuration-files).
 
 ## Installation
 
-Copy `persist.lua` to your mpv `scripts` directory.
+Put `persist.lua` in mpv `scripts` directory.
 
-## Usage
+For details, see [Script location - mpv.io](https://mpv.io/manual/stable/#script-location).
 
-The script automatically saves the specified properties when a file is loaded and restores them when a file from the same directory is played again.
+## Configuration
 
-### Properties
+Put `persist.conf` in mpv `script-opts` directory.
+
+For details, see [`mp.options` functions - mpv.io](https://mpv.io/manual/stable/#mp-options-functions).
+
+### `props`
+
+The `props` contains the list of properties to be persisted.
 
 By default, the following properties are persisted:
 
@@ -20,8 +26,7 @@ By default, the following properties are persisted:
 - `secondary-sid`
 - `secondary-sub-delay`
 
-You can modify this list by using a configuration file `persist.conf`.
+## References
 
-### Configuration File
-
-You can also specify the properties to be saved/loaded using a configuration file `persist.conf`:
+- [Configuration Files - mpv.io](https://mpv.io/manual/stable/#configuration-files)
+- [File-specific Configuration Files - mpv.io](https://mpv.io/manual/stable/#file-specific-configuration-files)
