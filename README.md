@@ -28,6 +28,13 @@ By default, the following properties are persisted:
 - `secondary-sid`
 - `secondary-sub-delay`
 
+### How it works
+
+1. Observes property changes.
+2. Persists these properties.
+3. Loads them on the `file-loaded` event, which is necessary to prevent [unexpected property resets](https://github.com/mpv-player/mpv/issues/13670).
+
 ## References
 
 - [File-specific Configuration Files - mpv.io](https://mpv.io/manual/stable/#file-specific-configuration-files)
+- [`reset-on-next-file` - mpv.io](https://mpv.io/manual/stable/#options-reset-on-next-file)
